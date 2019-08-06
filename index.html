@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Uber Like the project API</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <div id="map"></div>
+        <form>
+            <input type="text" id="adress" placeholder="Kiev theProject adress">
+            <button type="submit" id="goThereButton">Go there</button>
+        </form>
+        <div class="place"></div>
+
+    </div>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDz9nTD3ZvX96FT3OjKUJxBdrE4CAAeyQ&callback=initMap" async defer></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
