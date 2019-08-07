@@ -27,13 +27,13 @@ var directionsService = new google.maps.DirectionsService();
 var directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true,polylineOptions: {strokeColor: "black"}});
 
 
-// function initMap() {
+function initMap() {
 
-//     map = new google.maps.Map(document.getElementById('map'), {
-//         center: { lat: 50.468694899999996, lng:30.383463499999998 },
-//         zoom: 8,
-//     } );
-// }
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: -34.397, lng: 150.644 },
+        zoom: 8,
+    } );
+}
 
 
 
@@ -64,7 +64,7 @@ getLocation().then((coords) => {
             zoom: 14,
         });
 
-        let marker = new google.maps.Marker({
+        let CurPosmarker = new google.maps.Marker({
             position: new google.maps.LatLng(coords.coords.latitude, coords.coords.longitude),
             icon: {
                 url: 'img/curlocation.png',
