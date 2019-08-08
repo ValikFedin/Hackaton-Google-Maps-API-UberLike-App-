@@ -47,7 +47,7 @@ input {
     margin: 5px;
 }
 
-.place {
+#place {
     display: block;
     position: absolute;
     top: 50%;

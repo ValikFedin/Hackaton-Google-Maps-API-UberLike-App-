@@ -64,7 +64,9 @@ initMap().then((coords) => {
     map.addListener("dragend", () =>{
         getCenterLocation();
     })
-
+    map.addListener("dragstart",() =>{
+        showCenterPin();
+    })
     // Идем по всем такси и шпулим их на карту
 
     let loc = { lat: coords.coords.latitude, lng: coords.coords.longitude };
@@ -184,10 +186,15 @@ function geocodeLatLng(latlng,geocoder, map, infowindow,marker) {
   }
 
 
-
+function showCenterPin(){
+    let centerPin = document.getElementById('place');
+    centerPin.style.display = "block";
+}
 
 function getCenterLocation() {
 
+    let centerPin = document.getElementById('place');
+    centerPin.style.display = "none";
     let c = map.getCenter();
     let marker = new google.maps.Marker({
         position: new google.maps.LatLng(c.lat(), c.lng()),
@@ -205,7 +212,7 @@ function getCenterLocation() {
     }
     markersArray = [];
     markersArray.push(marker);
-
+    
     // let infowindow = new google.maps.InfoWindow({
 
     //     content: geocodeLatLng(c.lat(),c.lng(),geocoder,map)
