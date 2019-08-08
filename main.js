@@ -21,21 +21,61 @@ class Taxi {
 
 
 let map;
-let geocoder = new google.maps.Geocoder;
 let infowindow = new google.maps.InfoWindow;
-var directionsService = new google.maps.DirectionsService();
-var directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true,polylineOptions: {strokeColor: "black"}});
-
+let geocoder = new google.maps.Geocoder;
+let directionsService = new google.maps.DirectionsService();
+let directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true,polylineOptions: {strokeColor: "black"}});
+// window.onload = initMap();
 
 function initMap() {
 
     map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: -34.397, lng: 150.644 },
-        zoom: 8,
+        center: { lat: 50, lng: 30.644 },
+        zoom: 7,
     } );
+    return new Promise((resolve, reject) => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((coords) => {
+                resolve(coords);
+            });
+        } else {
+            reject("Geolocation is not supported by this browser.");
+        }
+    });
+    
 }
+initMap().then((coords) => {
 
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: coords.coords.latitude, lng: coords.coords.longitude },
+        zoom: 14,
+    });
 
+    let CurPosMarker = new google.maps.Marker({
+        position: new google.maps.LatLng(coords.coords.latitude, coords.coords.longitude),
+        icon: {
+            url: 'img/curlocation.png',
+            // size: new google.maps.Size(50, 50)
+        },
+        map: map
+    });
+    directionsRenderer.setMap(map);
+    
+    map.addListener("dragend", () =>{
+        getCenterLocation();
+    })
+
+    // Идем по всем такси и шпулим их на карту
+
+    let loc = { lat: coords.coords.latitude, lng: coords.coords.longitude };
+    taxiArray.forEach(taxi => {
+        generateTaxiOnMap(loc, taxi);
+    });
+    let taxiNumber =getRandomFloat(0,4).toFixed(0);
+    console.log(taxiNumber);
+    calculateAndDisplayRoute(directionsRenderer, directionsService,coords.coords.latitude,coords.coords.longitude,taxiArray[0].lat1,taxiArray[0].lng1);
+
+});
 
 
 ///Создала массив с таксишками!!!!
@@ -45,51 +85,51 @@ for (let i = 0; i < 5; i++) {
     taxiArray[i] = new Taxi;
 }
 ////
-function getLocation() {
-    return new Promise((resolve, reject) => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((coords) => {
-                resolve(coords);
-            });
-        } else {
-            reject("Geolocation is not supported by this browser.");
-        }
-    })
-}
+// function getLocation() {
+//     return new Promise((resolve, reject) => {
+//         if (navigator.geolocation) {
+//             navigator.geolocation.getCurrentPosition((coords) => {
+//                 resolve(coords);
+//             });
+//         } else {
+//             reject("Geolocation is not supported by this browser.");
+//         }
+//     })
+// }
 
-getLocation().then((coords) => {
+// getLocation().then((coords) => {
 
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: { lat: coords.coords.latitude, lng: coords.coords.longitude },
-            zoom: 14,
-        });
+//         map = new google.maps.Map(document.getElementById('map'), {
+//             center: { lat: coords.coords.latitude, lng: coords.coords.longitude },
+//             zoom: 14,
+//         });
 
-        let CurPosmarker = new google.maps.Marker({
-            position: new google.maps.LatLng(coords.coords.latitude, coords.coords.longitude),
-            icon: {
-                url: 'img/curlocation.png',
-                // size: new google.maps.Size(50, 50)
-            },
-            map: map
-        });
-        directionsRenderer.setMap(map);
+//         let CurPosmarker = new google.maps.Marker({
+//             position: new google.maps.LatLng(coords.coords.latitude, coords.coords.longitude),
+//             icon: {
+//                 url: 'img/curlocation.png',
+//                 // size: new google.maps.Size(50, 50)
+//             },
+//             map: map
+//         });
+//         directionsRenderer.setMap(map);
         
- 
+//         map.addListener("dragend", () =>{
+//             getCenterLocation();
+//         })
 
-        // Идем по всем такси и шпулим их на карту
-        map.addListener("dragend", () =>{
-            getCenterLocation();
-        })
-        let loc = { lat: coords.coords.latitude, lng: coords.coords.longitude };
-        taxiArray.forEach(taxi => {
-            generateTaxiOnMap(loc, taxi);
-        });
-        let taxiNumber =getRandomFloat(0,4).toFixed(0);
-        console.log(taxiNumber);
-        calculateAndDisplayRoute(directionsRenderer, directionsService,coords.coords.latitude,coords.coords.longitude,taxiArray[0].lat1,taxiArray[0].lng1);
+//         // Идем по всем такси и шпулим их на карту
+    
+//         let loc = { lat: coords.coords.latitude, lng: coords.coords.longitude };
+//         taxiArray.forEach(taxi => {
+//             generateTaxiOnMap(loc, taxi);
+//         });
+//         let taxiNumber =getRandomFloat(0,4).toFixed(0);
+//         console.log(taxiNumber);
+//         calculateAndDisplayRoute(directionsRenderer, directionsService,coords.coords.latitude,coords.coords.longitude,taxiArray[0].lat1,taxiArray[0].lng1);
 
-    });
-
+//     });
+  
 
     function calculateAndDisplayRoute(DirectionsRenderer, directionsService,originLat,originLng,destLat,destLng) {
       // Retrieve the start and end locations and create a DirectionsRequest using
