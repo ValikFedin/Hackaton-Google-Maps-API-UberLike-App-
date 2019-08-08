@@ -29,10 +29,10 @@ let directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: tr
 
 function initMap() {
 
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: 50, lng: 30.644 },
-        zoom: 7,
-    } );
+    // map = new google.maps.Map(document.getElementById('map'), {
+    //     center: { lat: 50, lng: 30.644 },
+    //     zoom: 7,
+    // } );
     return new Promise((resolve, reject) => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((coords) => {
