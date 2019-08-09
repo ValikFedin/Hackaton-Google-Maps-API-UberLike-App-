@@ -14,13 +14,14 @@
     <div class="container">
         <div id="map"></div>
         <form>
-            <input type="text" id="adress" placeholder="Kiev theProject adress">
-            <button type="submit" id="goThereButton">Go there</button>
+
+            <input type="text" id="adress">
+            <button type="button" id="goThereButton">Go there</button>
         </form>
         <div id="place"></div>
     </div>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDz9nTD3ZvX96FT3OjKUJxBdrE4CAAeyQ&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCDz9nTD3ZvX96FT3OjKUJxBdrE4CAAeyQ" async defer></script>
     <script src="main.js"></script>
 </body>
 

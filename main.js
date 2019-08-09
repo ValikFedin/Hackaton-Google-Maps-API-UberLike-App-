@@ -27,6 +27,26 @@ window.onload = () => {
     suppressMarkers: true,
     polylineOptions: { strokeColor: "black" }
   });
+  document.getElementById("adress").addEventListener("keydown",(e)=>{
+      if(e.keyCode=='13'){
+          event.preventDefault();
+      }
+  })
+ 
+  let ac = new google.maps.places.Autocomplete(document.getElementById('adress'));
+  google.maps.event.addListener(ac, 'place_changed',inputGetPlace)
+  document.getElementById("goThereButton").addEventListener("click",()=>{
+    loc = inputGetPlace();
+    // map.setCenter(new google.maps.LatLng(loc.lat,loc.lng));
+    calculateAndDisplayRoute(
+        directionsRenderer,
+        directionsService,
+        coords.coords.latitude,
+        coords.coords.longitude,
+        loc.lat,
+        loc.lng
+      );
+  })
   async function initMap() {
     try {
       if (await navigator.geolocation) {
@@ -36,12 +56,13 @@ window.onload = () => {
       console.log(err.toString());
     }
   }
+
+
   function Render(coords) {
     map = new google.maps.Map(document.getElementById("map"), {
       center: { lat: coords.coords.latitude, lng: coords.coords.longitude },
       zoom: 14
     });
-
     let CurPosMarker = new google.maps.Marker({
       position: new google.maps.LatLng(
         coords.coords.latitude,
@@ -53,7 +74,6 @@ window.onload = () => {
       map: map
     });
     directionsRenderer.setMap(map);
-
     map.addListener("dragend", () => {
       getCenterLocation();
     });
@@ -68,14 +88,37 @@ window.onload = () => {
     });
     let taxiNumber = getRandomFloat(0, 4).toFixed(0);
     console.log(taxiNumber);
+    google.maps.event.addListener(ac, 'place_changed',inputGetPlace)
+  document.getElementById("goThereButton").addEventListener("click",()=>{
+    loc = inputGetPlace();
+    // map.setCenter(new google.maps.LatLng(loc.lat,loc.lng));
     calculateAndDisplayRoute(
-      directionsRenderer,
-      directionsService,
-      coords.coords.latitude,
-      coords.coords.longitude,
-      taxiArray[0].lat1,
-      taxiArray[0].lng1
-    );
+        directionsRenderer,
+        directionsService,
+        coords.coords.latitude,
+        coords.coords.longitude,
+        loc.lat,
+        loc.lng
+      );
+  })
+    // calculateAndDisplayRoute(
+    //   directionsRenderer,
+    //   directionsService,
+    //   coords.coords.latitude,
+    //   coords.coords.longitude,
+    //   taxiArray[0].lat1,
+    //   taxiArray[0].lng1
+    // );
+  }
+  function inputGetPlace(){
+    let place = ac.getPlace();
+    // console.log(place.formatted_address);
+    // console.log(place.url);
+    // console.log(place.geometry.location.lat());
+    return {
+        lat:place.geometry.location.lat(),
+        lng:place.geometry.location.lng()
+    }
   }
   ///Создала массив с таксишками!!!!
   let taxi = new Taxi();
@@ -115,7 +158,6 @@ window.onload = () => {
   //делает маркер таксишку
   function generateTaxiOnMap(loc, taxi) {
     taxi.SetRandomLocation = loc;
-    console.log(taxi.lat1, taxi.lng1);
     let markerTaxi = new google.maps.Marker({
       position: new google.maps.LatLng(taxi.lat1, taxi.lng1),
       icon: {
