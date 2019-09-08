@@ -2,9 +2,7 @@ window.onload = () => {
   function getRandomFloat(min, max) {
     return Math.random() * (max - min) + min;
   }
-  let mapstyles = {
-    
-  }
+
   class Taxi {
     constructor(lat, lng) {
       this.lat1 = lat;
@@ -87,8 +85,11 @@ window.onload = () => {
     google.maps.event.addListener(ac, 'place_changed',inputGetPlace)
   document.getElementById("goThereButton").addEventListener("click",()=>{
     loc = inputGetPlace();
+    let tarif = 40;
     // map.setCenter(new google.maps.LatLng(loc.lat,loc.lng));
-    document.getElementById("map").style.height ="80%";
+    document.getElementById("inform").style.display="flex";
+    document.getElementById("mapContainer").style.height ="80%";
+    document.getElementById("inform").style.height ="20%";
     calculateAndDisplayRoute(
         directionsRenderer,
         directionsService,
@@ -113,12 +114,44 @@ window.onload = () => {
         if (status !== 'OK') {
           alert('Error was: ' + status);
         } else {
-          let distance = response.rows[0].elements[0].distance.text;
+          // console.log(response.destinationAddresses[0]);
+          // console.log(response.originAddresses[0]);
+          let distance = response.rows[0].elements[0].distance.text.split(" ");
           let duration = response.rows[0].elements[0].duration.text;
+          geocoder.geocode({ location: latLngA }, function(results, status) {
+            if (status === "OK") {
+              if (results[0]) {
+                document.getElementById("orig").innerText=results[0].address_components[1].long_name + " " +results[0].address_components[0].long_name
+              } else {
+                window.alert("No results found");
+              }
+            } else {
+              window.alert("Geocoder failed due to: " + status);
+            }
+          });
+          geocoder.geocode({ location: latLngB }, function(results, status) {
+            if (status === "OK") {
+              if (results[0]) {
+                document.getElementById("dest").innerText=results[0].address_components[1].long_name + " " +results[0].address_components[0].long_name
+              } else {
+                window.alert("No results found");
+              }
+            } else {
+              window.alert("Geocoder failed due to: " + status);
+            }
+          });
+          
+          tarif+=parseInt(distance[0])*5;
+          document.getElementById("price").innerText = `${tarif} грн`
         }
+       
       });
   });
-
+  document.getElementById("closebtn").addEventListener('click',()=>{
+    document.getElementById("inform").style.display="none";
+    document.getElementById("mapContainer").style.height ="100%";
+    document.getElementById("inform").style.height ="0%";
+  })
   };
 
 
