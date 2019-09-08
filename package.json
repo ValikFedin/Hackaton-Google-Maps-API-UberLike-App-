@@ -1,0 +1,22 @@
+{
+  "name": "uberlike",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ValikFedin/Hackaton-Google-Maps-API-UberLike-App-.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ValikFedin/Hackaton-Google-Maps-API-UberLike-App-/issues"
+  },
+  "homepage": "https://github.com/ValikFedin/Hackaton-Google-Maps-API-UberLike-App-#readme",
+  "dependencies": {
+    "jquery": "^3.4.1"
+  }
+}

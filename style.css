@@ -1,3 +1,21 @@
+input[type="color"],
+input[type="date"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="email"],
+input[type="month"],
+input[type="number"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="text"],
+input[type="time"],
+input[type="url"],
+input[type="week"],
+select:focus,
+textarea {
+  font-size: 16px;
+}
 #map {
   height: 100%;
 }
@@ -30,7 +48,7 @@ input {
   background-color: rgb(218, 218, 218);
   color: #000000;
   border-radius: 20px;
-  height: 35px;
+  height: 30px;
   width: 250px;
   padding-left: 25px;
   box-sizing: border-box;
@@ -40,13 +58,13 @@ input {
 
 #goThereButton {
   border-radius: 20px;
-  height: 35px;
+  height: 30px;
   width: 250px;
   background-color: rgb(69, 214, 219);
   color: #000000;
   box-sizing: border-box;
   margin: 5px;
-    outline: none;
+  outline: none;
 }
 
 #place {
@@ -60,4 +78,8 @@ input {
   background-position: 50% 0%;
   width: 100px;
   height: 100px;
+}
+#inform{
+  width:100%;
+  background:red;
 }

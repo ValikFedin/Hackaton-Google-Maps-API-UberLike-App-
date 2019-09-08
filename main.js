@@ -1,8 +1,9 @@
-//API key AIzaSyCDz9nTD3ZvX96FT3OjKUJxBdrE4CAAeyQ
-
 window.onload = () => {
   function getRandomFloat(min, max) {
     return Math.random() * (max - min) + min;
+  }
+  let mapstyles = {
+    
   }
   class Taxi {
     constructor(lat, lng) {
@@ -22,6 +23,7 @@ window.onload = () => {
   let map;
   let infowindow = new google.maps.InfoWindow();
   let geocoder = new google.maps.Geocoder();
+  let service = new google.maps.DistanceMatrixService;
   let directionsService = new google.maps.DirectionsService();
   let directionsRenderer = new google.maps.DirectionsRenderer({
     suppressMarkers: true,
@@ -35,18 +37,6 @@ window.onload = () => {
  
   let ac = new google.maps.places.Autocomplete(document.getElementById('adress'));
   google.maps.event.addListener(ac, 'place_changed',inputGetPlace)
-  document.getElementById("goThereButton").addEventListener("click",()=>{
-    loc = inputGetPlace();
-    // map.setCenter(new google.maps.LatLng(loc.lat,loc.lng));
-    calculateAndDisplayRoute(
-        directionsRenderer,
-        directionsService,
-        coords.coords.latitude,
-        coords.coords.longitude,
-        loc.lat,
-        loc.lng
-      );
-  })
   async function initMap() {
     try {
       if (await navigator.geolocation) {
@@ -61,7 +51,13 @@ window.onload = () => {
   function Render(coords) {
     map = new google.maps.Map(document.getElementById("map"), {
       center: { lat: coords.coords.latitude, lng: coords.coords.longitude },
-      zoom: 14
+      zoom: 14,
+      zoomControl: true,
+      mapTypeControl: false,
+      scaleControl: true,
+      streetViewControl: false,
+      rotateControl: true,
+      fullscreenControl: false
     });
     let CurPosMarker = new google.maps.Marker({
       position: new google.maps.LatLng(
@@ -87,11 +83,12 @@ window.onload = () => {
       generateTaxiOnMap(loc, taxi);
     });
     let taxiNumber = getRandomFloat(0, 4).toFixed(0);
-    console.log(taxiNumber);
+    // console.log(taxiNumber);
     google.maps.event.addListener(ac, 'place_changed',inputGetPlace)
   document.getElementById("goThereButton").addEventListener("click",()=>{
     loc = inputGetPlace();
     // map.setCenter(new google.maps.LatLng(loc.lat,loc.lng));
+    document.getElementById("map").style.height ="80%";
     calculateAndDisplayRoute(
         directionsRenderer,
         directionsService,
@@ -100,16 +97,31 @@ window.onload = () => {
         loc.lat,
         loc.lng
       );
-  })
-    // calculateAndDisplayRoute(
-    //   directionsRenderer,
-    //   directionsService,
-    //   coords.coords.latitude,
-    //   coords.coords.longitude,
-    //   taxiArray[0].lat1,
-    //   taxiArray[0].lng1
-    // );
-  }
+
+      let latLngA = new google.maps.LatLng(coords.coords.latitude,coords.coords.longitude);
+      let latLngB = new google.maps.LatLng(loc.lat,loc.lng);
+      // console.log(google.maps.geometry.spherical.computeDistanceBetween (latLngA, latLngB));
+      
+      service.getDistanceMatrix({
+        origins: [latLngA],
+        destinations: [latLngB],
+        travelMode: 'DRIVING',
+        unitSystem: google.maps.UnitSystem.METRIC,
+        avoidHighways: false,
+        avoidTolls: false
+      }, function(response, status) {
+        if (status !== 'OK') {
+          alert('Error was: ' + status);
+        } else {
+          let distance = response.rows[0].elements[0].distance.text;
+          let duration = response.rows[0].elements[0].duration.text;
+        }
+      });
+  });
+
+  };
+
+
   function inputGetPlace(){
     let place = ac.getPlace();
     // console.log(place.formatted_address);
